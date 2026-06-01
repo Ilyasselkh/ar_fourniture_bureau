@@ -84,7 +84,9 @@
                     <field name="state"
                            widget="statusbar"
                            statusbar_visible="new,n1,processing,received,refused"/>
+                </header>
 
+                <header>
                     <button name="action_submit_n1"
                             type="object"
                             string="Soumettre N+1"

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ========================================= -->
+        <!-- 1) Demandeur (User) : ne voit que ses demandes -->
+        <!-- ========================================= -->
+        <record id="rule_ar_fb_demande_user_own" model="ir.rule">
+            <field name="name">AR FB Demande - User: own requests only</field>
+            <field name="model_id" ref="model_ar_fb_demande"/>
+            <field name="groups" eval="[(4, ref('ar_fourniture_bureau.group_ar_fb_user'))]"/>
+            <field name="domain_force">
+                [('demandeur_id.user_id', '=', user.id)]
+            </field>
+        </record>
+
+        <record id="rule_ar_fb_demande_line_user_own" model="ir.rule">
+            <field name="name">AR FB Demande Line - User: own requests only</field>
+            <field name="model_id" ref="model_ar_fb_demande_line"/>
+            <field name="groups" eval="[(4, ref('ar_fourniture_bureau.group_ar_fb_user'))]"/>
+            <field name="domain_force">
+                [('demande_id.demandeur_id.user_id', '=', user.id)]
+            </field>
+        </record>
+
+        <!-- =========================================================== -->
+        <!-- 2) Manager N+1 : voit ses demandes + celles de ses demandeurs -->
+        <!-- =========================================================== -->
+        <record id="rule_ar_fb_demande_manager_own_and_team" model="ir.rule">
+            <field name="name">AR FB Demande - Manager: own + subordinates</field>
+            <field name="model_id" ref="model_ar_fb_demande"/>
+            <field name="groups" eval="[(4, ref('ar_fourniture_bureau.group_ar_fb_manager'))]"/>
+            <field name="domain_force">
+                ['|',
+                    ('demandeur_id.user_id', '=', user.id),
+                    ('manager_n1_id.user_id', '=', user.id)
+                ]
+            </field>
+        </record>
+
+        <record id="rule_ar_fb_demande_line_manager_own_and_team" model="ir.rule">
+            <field name="name">AR FB Demande Line - Manager: own + subordinates</field>
+            <field name="model_id" ref="model_ar_fb_demande_line"/>
+            <field name="groups" eval="[(4, ref('ar_fourniture_bureau.group_ar_fb_manager'))]"/>
+            <field name="domain_force">
+                ['|',
+                    ('demande_id.demandeur_id.user_id', '=', user.id),
+                    ('demande_id.manager_n1_id.user_id', '=', user.id)
+                ]
+            </field>
+        </record>
+
+        <!-- ========================================= -->
+        <!-- 3) Traitement : voit toutes les demandes -->
+        <!-- ========================================= -->
+        <record id="rule_ar_fb_demande_traitement_all" model="ir.rule">
+            <field name="name">AR FB Demande - Traitement: all requests</field>
+            <field name="model_id" ref="model_ar_fb_demande"/>
+            <field name="groups" eval="[(4, ref('ar_fourniture_bureau.group_ar_fb_traitement'))]"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+        </record>
+
+        <record id="rule_ar_fb_demande_line_traitement_all" model="ir.rule">
+            <field name="name">AR FB Demande Line - Traitement: all requests</field>
+            <field name="model_id" ref="model_ar_fb_demande_line"/>
+            <field name="groups" eval="[(4, ref('ar_fourniture_bureau.group_ar_fb_traitement'))]"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+        </record>
+
+    </data>
+</odoo>

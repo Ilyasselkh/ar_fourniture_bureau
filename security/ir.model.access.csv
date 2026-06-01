@@ -1,0 +1,23 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_ar_fb_demande_internal,ar.fb.demande internal,model_ar_fb_demande,base.group_user,0,0,0,0
+access_ar_fb_demande_line_internal,ar.fb.demande.line internal,model_ar_fb_demande_line,base.group_user,0,0,0,0
+
+access_ar_fb_article_param,ar.fb.article param,model_ar_fb_article,ar_fourniture_bureau.group_ar_fb_param,1,1,1,0
+access_ar_fb_traiteur_param,ar.fb.traiteur param,model_ar_fb_traiteur,ar_fourniture_bureau.group_ar_fb_param,1,1,1,0
+
+access_ar_fb_article_user_read,ar.fb.article user read,model_ar_fb_article,ar_fourniture_bureau.group_ar_fb_user,1,0,0,0
+
+access_ar_fb_demande_traitement,ar.fb.demande traitement,model_ar_fb_demande,ar_fourniture_bureau.group_ar_fb_traitement,1,1,1,0
+access_ar_fb_demande_line_traitement,ar.fb.demande.line traitement,model_ar_fb_demande_line,ar_fourniture_bureau.group_ar_fb_traitement,1,1,1,0
+
+
+access_ar_fb_demande_user,ar.fb.demande user,model_ar_fb_demande,ar_fourniture_bureau.group_ar_fb_user,1,1,1,0
+access_ar_fb_demande_line_user,ar.fb.demande.line user,model_ar_fb_demande_line,ar_fourniture_bureau.group_ar_fb_user,1,1,1,0
+
+access_ar_fb_demande_manager,ar.fb.demande manager,model_ar_fb_demande,ar_fourniture_bureau.group_ar_fb_manager,1,1,1,0
+access_ar_fb_demande_line_manager,ar.fb.demande.line manager,model_ar_fb_demande_line,ar_fourniture_bureau.group_ar_fb_manager,1,1,1,0
+
+access_ar_fb_documentation_user_read,ar.fb.documentation user read,model_ar_fb_documentation,ar_fourniture_bureau.group_ar_fb_user,1,0,0,0
+access_ar_fb_documentation_param_read,ar.fb.documentation param read,model_ar_fb_documentation,ar_fourniture_bureau.group_ar_fb_param,1,0,0,0
+access_ar_fb_documentation_traitement,ar.fb.documentation traitement,model_ar_fb_documentation,ar_fourniture_bureau.group_ar_fb_traitement,1,1,1,1

@@ -1,0 +1,66 @@
+<odoo>
+    <record id="module_category_ar_fourniture_bureau" model="ir.module.category">
+        <field name="name">AR Fourniture Bureau</field>
+        <field name="sequence">25</field>
+    </record>
+
+    <record id="privilege_ar_fb_param" model="res.groups.privilege">
+        <field name="name">Parametrage</field>
+        <field name="category_id" ref="module_category_ar_fourniture_bureau"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="privilege_ar_fb_traitement" model="res.groups.privilege">
+        <field name="name">Traitement</field>
+        <field name="category_id" ref="module_category_ar_fourniture_bureau"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="privilege_ar_fb_user" model="res.groups.privilege">
+        <field name="name">Demandeur</field>
+        <field name="category_id" ref="module_category_ar_fourniture_bureau"/>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="privilege_ar_fb_manager" model="res.groups.privilege">
+        <field name="name">Manager N+1</field>
+        <field name="category_id" ref="module_category_ar_fourniture_bureau"/>
+        <field name="sequence">40</field>
+    </record>
+
+    <!-- Groupe Parametrage -->
+    <record id="group_ar_fb_param" model="res.groups">
+        <field name="name">AR FB - Parametrage</field>
+        <field name="privilege_id" ref="privilege_ar_fb_param"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Groupe Traitement -->
+    <record id="group_ar_fb_traitement" model="res.groups">
+        <field name="name">AR FB - Traitement</field>
+        <field name="privilege_id" ref="privilege_ar_fb_traitement"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <!-- Groupe Demandeur -->
+    <record id="group_ar_fb_user" model="res.groups">
+        <field name="name">AR FB - Demandeur</field>
+        <field name="privilege_id" ref="privilege_ar_fb_user"/>
+        <field name="sequence">30</field>
+    </record>
+
+    <!-- Groupe Manager N+1 -->
+    <record id="group_ar_fb_manager" model="res.groups">
+        <field name="name">AR FB - Manager N+1</field>
+        <field name="privilege_id" ref="privilege_ar_fb_manager"/>
+        <field name="sequence">40</field>
+    </record>
+
+    <record id="group_ar_fb_traitement" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('ar_fourniture_bureau.group_ar_fb_user'))]"/>
+    </record>
+
+    <record id="group_ar_fb_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('ar_fourniture_bureau.group_ar_fb_user'))]"/>
+    </record>
+</odoo>

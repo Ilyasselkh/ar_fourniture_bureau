@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- 1) Création -> Manager N+1 -->
+        <record id="mail_template_fb_new_to_manager" model="mail.template">
+            <field name="name">FB - Nouvelle demande (Manager N+1)</field>
+            <field name="model_id" ref="model_ar_fb_demande"/>
+            <field name="subject">[Fourniture Bureau] {{ object.name }} - Validation N+1 requise</field>
+            <field name="email_from">FB Workflow &lt;DF-ARMaroc@araymond.com&gt;</field>
+            <field name="email_to"></field>
+
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour,</p>
+                    <p>Une <strong>nouvelle demande de fourniture de bureau</strong> nécessite votre validation (N+1).</p>
+
+                    <p>
+                        <strong>Référence :</strong> <t t-out="object.name"/><br/>
+                        <strong>Demandeur :</strong> <t t-out="object.demandeur_id.name or ''"/><br/>
+                        <strong>Département :</strong> <t t-out="object.department_id.name or ''"/><br/>
+                        <strong>Date de besoin :</strong> <t t-out="object.date_besoin or ''"/>
+                    </p>
+
+                    <t t-set="base_url" t-value="object.get_base_url()"/>
+                    <div style="margin: 16px 0px;">
+                        <a t-attf-href="{{ base_url }}/web#id={{ object.id }}&amp;model=ar.fb.demande&amp;view_type=form"
+                           style="background-color:#1481f4;padding:8px 16px;text-decoration:none;color:#fff;border-radius:5px;font-size:13px;">
+                            Accéder à la demande
+                        </a>
+                    </div>
+
+                    <p>Merci.</p>
+                </div>
+            </field>
+        </record>
+
+
+        <!-- 2) N+1 valide -> Demandeur -->
+        <record id="mail_template_fb_approved_to_demandeur" model="mail.template">
+            <field name="name">FB - Demande validée (Demandeur)</field>
+            <field name="model_id" ref="model_ar_fb_demande"/>
+            <field name="subject">[Fourniture Bureau] {{ object.name }} - Validée par votre manager</field>
+            <field name="email_from">FB Workflow &lt;DF-ARMaroc@araymond.com&gt;</field>
+            <field name="email_to"></field>
+
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour,</p>
+                    <p>Votre demande <strong><t t-out="object.name"/></strong> a été <strong>validée</strong> par votre manager N+1.</p>
+
+                    <t t-set="base_url" t-value="object.get_base_url()"/>
+                    <div style="margin: 16px 0px;">
+                        <a t-attf-href="{{ base_url }}/web#id={{ object.id }}&amp;model=ar.fb.demande&amp;view_type=form"
+                           style="background-color:#16a34a;padding:8px 16px;text-decoration:none;color:#fff;border-radius:5px;font-size:13px;">
+                            Voir la demande
+                        </a>
+                    </div>
+
+                    <p>Merci.</p>
+                </div>
+            </field>
+        </record>
+
+
+        <!-- 3) Passage en traitement -> Traiteurs -->
+        <record id="mail_template_fb_processing_to_traiteurs" model="mail.template">
+            <field name="name">FB - Demande à traiter (Traiteurs)</field>
+            <field name="model_id" ref="model_ar_fb_demande"/>
+            <field name="subject">[Fourniture Bureau] {{ object.name }} - Nouvelle demande à traiter</field>
+            <field name="email_from">FB Workflow &lt;DF-ARMaroc@araymond.com&gt;</field>
+            <field name="email_to"></field>
+
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour,</p>
+                    <p>Une demande est passée à l’état <strong>Traitement</strong> et nécessite votre prise en charge.</p>
+
+                    <p>
+                        <strong>Référence :</strong> <t t-out="object.name"/><br/>
+                        <strong>Demandeur :</strong> <t t-out="object.demandeur_id.name or ''"/><br/>
+                        <strong>Département :</strong> <t t-out="object.department_id.name or ''"/>
+                    </p>
+
+                    <t t-set="base_url" t-value="object.get_base_url()"/>
+                    <div style="margin: 16px 0px;">
+                        <a t-attf-href="{{ base_url }}/web#id={{ object.id }}&amp;model=ar.fb.demande&amp;view_type=form"
+                           style="background-color:#f59e0b;padding:8px 16px;text-decoration:none;color:#111;border-radius:5px;font-size:13px;">
+                            Accéder à la demande
+                        </a>
+                    </div>
+
+                    <p>Merci.</p>
+                </div>
+            </field>
+        </record>
+
+
+        <!-- 4) Réceptionnée -> Demandeur -->
+        <record id="mail_template_fb_received_to_demandeur" model="mail.template">
+            <field name="name">FB - Demande Livrée (Demandeur)</field>
+            <field name="model_id" ref="model_ar_fb_demande"/>
+            <field name="subject">[Fourniture Bureau] {{ object.name }} - Livrée</field>
+            <field name="email_from">FB Workflow &lt;DF-ARMaroc@araymond.com&gt;</field>
+            <field name="email_to"></field>
+
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour,</p>
+                    <p>Votre demande <strong><t t-out="object.name"/></strong> a été marquée comme <strong>Livrée</strong>.</p>
+
+                    <t t-set="base_url" t-value="object.get_base_url()"/>
+                    <div style="margin: 16px 0px;">
+                        <a t-attf-href="{{ base_url }}/web#id={{ object.id }}&amp;model=ar.fb.demande&amp;view_type=form"
+                           style="background-color:#1481f4;padding:8px 16px;text-decoration:none;color:#fff;border-radius:5px;font-size:13px;">
+                            Voir la demande
+                        </a>
+                    </div>
+
+                    <p>Merci.</p>
+                </div>
+            </field>
+        </record>
+
+
+        <!-- 5) Refusée -> Demandeur -->
+        <record id="mail_template_fb_refused_to_demandeur" model="mail.template">
+            <field name="name">FB - Demande refusée (Demandeur)</field>
+            <field name="model_id" ref="model_ar_fb_demande"/>
+            <field name="subject">[Fourniture Bureau] {{ object.name }} - Refusée</field>
+            <field name="email_from">FB Workflow &lt;DF-ARMaroc@araymond.com&gt;</field>
+            <field name="email_to"></field>
+
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour,</p>
+                    <p>Votre demande <strong><t t-out="object.name"/></strong> a été <strong>refusée</strong>.</p>
+                    <p>Merci de consulter la demande pour plus de détails.</p>
+
+                    <t t-set="base_url" t-value="object.get_base_url()"/>
+                    <div style="margin: 16px 0px;">
+                        <a t-attf-href="{{ base_url }}/web#id={{ object.id }}&amp;model=ar.fb.demande&amp;view_type=form"
+                           style="background-color:#dc2626;padding:8px 16px;text-decoration:none;color:#fff;border-radius:5px;font-size:13px;">
+                            Voir la demande
+                        </a>
+                    </div>
+
+                    <p>Merci.</p>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

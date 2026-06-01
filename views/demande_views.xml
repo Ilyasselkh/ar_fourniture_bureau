@@ -1,0 +1,241 @@
+<odoo>
+
+    <!-- ========================= -->
+    <!-- Séquence -->
+    <!-- ========================= -->
+    <record id="seq_ar_fb_demande" model="ir.sequence">
+        <field name="name">AR FB Demande</field>
+        <field name="code">ar.fb.demande</field>
+        <field name="prefix">RH-FB-</field>
+        <field name="padding">4</field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- List View -->
+    <!-- ========================= -->
+    <record id="view_ar_fb_demande_list" model="ir.ui.view">
+        <field name="name">ar.fb.demande.list</field>
+        <field name="model">ar.fb.demande</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="demandeur_id"/>
+                <field name="department_id"/>
+                <field name="manager_n1_id"/>
+                <field name="date_besoin"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- Form View -->
+    <!-- ========================= -->
+    <record id="view_ar_fb_demande_kanban" model="ir.ui.view">
+        <field name="name">ar.fb.demande.kanban</field>
+        <field name="model">ar.fb.demande</field>
+        <field name="arch" type="xml">
+            <kanban class="ar_fourniture_bureau_kanban" default_group_by="state" quick_create="false">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="demandeur_id"/>
+                <field name="manager_n1_id"/>
+                <field name="department_id"/>
+                <field name="date_besoin"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_global_click oe_kanban_card ar_request_card ar_state_#{record.state.raw_value}">
+                            <div class="ar_card_topline"/>
+                            <div class="ar_card_header">
+                                <div>
+                                    <span class="ar_card_ref"><field name="name"/></span>
+                                    <strong class="ar_card_title">Fourniture bureau</strong>
+                                </div>
+                                <span class="ar_card_state"><field name="state"/></span>
+                            </div>
+                            <div class="ar_card_person">
+                                <span class="ar_card_avatar"><i class="fa fa-user"/></span>
+                                <div>
+                                    <span class="ar_card_label">Collaborateur</span>
+                                    <strong><field name="demandeur_id"/></strong>
+                                </div>
+                            </div>
+                            <div class="ar_card_meta">
+                                <span><i class="fa fa-sitemap"/> <field name="department_id"/></span>
+                                <span><i class="fa fa-check-circle"/> <field name="manager_n1_id"/></span>
+                            </div>
+                            <div class="ar_card_dates">
+                                <span><i class="fa fa-calendar-o"/> <field name="date_besoin"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ar_fb_demande_form" model="ir.ui.view">
+        <field name="name">ar.fb.demande.form</field>
+        <field name="model">ar.fb.demande</field>
+        <field name="arch" type="xml">
+            <form string="Demande fourniture bureau" class="ar_fb_demande_form">
+
+                <header>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="new,n1,processing,received,refused"/>
+
+                    <button name="action_submit_n1"
+                            type="object"
+                            string="Soumettre N+1"
+                            class="btn-success"
+                            groups="ar_fourniture_bureau.group_ar_fb_user"
+                            invisible="not can_submit_n1"/>
+
+                    <button name="action_approve_n1"
+                            type="object"
+                            string="Valider (N+1)"
+                            class="btn-success"
+                            groups="ar_fourniture_bureau.group_ar_fb_manager"
+                            invisible="not can_approve_n1"/>
+
+                    <button name="action_received"
+                            type="object"
+                            string="Marquer Réceptionnée"
+                            class="btn-success"
+                            groups="ar_fourniture_bureau.group_ar_fb_traitement"
+                            invisible="not can_mark_received"/>
+
+                    <!-- Refus par le Manager N+1 -->
+                    <button name="action_refuse"
+                            type="object"
+                            string="Refuser"
+                            class="btn-danger"
+                            groups="ar_fourniture_bureau.group_ar_fb_manager"
+                            invisible="not can_refuse_request or state != 'n1'"/>
+
+                    <!-- Refus par le Traitement -->
+                    <button name="action_refuse"
+                            type="object"
+                            string="Refuser"
+                            class="btn-danger"
+                            groups="ar_fourniture_bureau.group_ar_fb_traitement"
+                            invisible="not can_refuse_request or state != 'processing'"/>
+                </header>
+
+                <sheet class="ar_fb_demande_sheet">
+                    <field name="is_demandeur" invisible="True"/>
+                    <field name="is_manager_n1" invisible="True"/>
+                    <field name="can_process" invisible="True"/>
+                    <field name="can_edit_request" invisible="True"/>
+                    <field name="can_submit_n1" invisible="True"/>
+                    <field name="can_approve_n1" invisible="True"/>
+                    <field name="can_refuse_request" invisible="True"/>
+                    <field name="can_mark_received" invisible="True"/>
+
+                    <!-- ========================= -->
+                    <!-- Informations générales -->
+                    <!-- ========================= -->
+                    <div class="ar_sortie_caisse_title">
+                        <div>
+                            <span class="ar_sortie_caisse_label">Demande fourniture bureau</span>
+                            <h1>
+                                <field name="name" readonly="True" nolabel="1"/>
+                            </h1>
+                            <div class="ar_sc_static_3d" aria-hidden="true">
+                                <span class="ar_sc_3d_card ar_sc_3d_card_main"/>
+                                <span class="ar_sc_3d_card ar_sc_3d_card_back"/>
+                                <span class="ar_sc_3d_card ar_sc_3d_card_front"/>
+                                <span class="ar_sc_3d_coin ar_sc_3d_coin_one"/>
+                                <span class="ar_sc_3d_coin ar_sc_3d_coin_two"/>
+                                <span class="ar_sc_3d_coin ar_sc_3d_coin_three"/>
+                            </div>
+                        </div>
+                        <div class="ar_sortie_caisse_amount ar_request_status_box">
+                            <span>Statut actuel</span>
+                            <field name="state" readonly="1" widget="badge" nolabel="1"/>
+                        </div>
+                    </div>
+
+                    <div class="ar_sortie_caisse_main_row">
+                        <group class="ar_sortie_caisse_panel ar_sortie_caisse_identity">
+                            <group string="Informations demandeur">
+                                <field name="date_besoin" readonly="not can_edit_request"/>
+                                <field name="demandeur_id" readonly="True"/>
+                                <field name="department_id" readonly="True"/>
+                                <field name="manager_n1_id" readonly="True"/>
+                            </group>
+                        </group>
+
+                        <group class="ar_sortie_caisse_panel ar_sortie_caisse_description">
+                            <field name="commentaire"
+                                   placeholder="Ajouter un commentaire..."
+                                   readonly="not can_edit_request"/>
+
+                            <field name="attachment_ids"
+                                   widget="many2many_binary"
+                                   readonly="not can_edit_request"/>
+                        </group>
+                    </div>
+
+                    <!-- ========================= -->
+                    <!-- Tableau -->
+                    <!-- ========================= -->
+                    <separator string="Articles demandés"/>
+
+                    <div class="ar_sortie_caisse_panel ar_sortie_caisse_lines">
+                        <field name="line_ids"
+                               nolabel="1"
+                               class="o_full_width"
+                               readonly="not can_edit_request">
+                            <list editable="bottom" string="Lignes">
+                                <field name="article_id"
+                                       string="Article"
+                                       options="{'no_create_edit': True}"
+                                       domain="[('disponible','=',True)]"/>
+                                <field name="quantity" string="Qté"/>
+                            </list>
+                        </field>
+                    </div>
+
+                </sheet>
+
+                <!-- ========================= -->
+                <!-- Chatter -->
+                <!-- ========================= -->
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- Action principale : Demandes EN COURS seulement -->
+    <!-- ========================= -->
+    <record id="action_ar_fb_demande" model="ir.actions.act_window">
+        <field name="name">Demandes</field>
+        <field name="res_model">ar.fb.demande</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('state','in',('new','n1','processing'))]</field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- Archive Réceptionnée -->
+    <!-- ========================= -->
+    <record id="action_ar_fb_archive_received" model="ir.actions.act_window">
+        <field name="name">Archive - Réceptionnée</field>
+        <field name="res_model">ar.fb.demande</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('state','=','received')]</field>
+    </record>
+
+    <!-- ========================= -->
+    <!-- Archive Refusée -->
+    <!-- ========================= -->
+    <record id="action_ar_fb_archive_refused" model="ir.actions.act_window">
+        <field name="name">Archive - Refusée</field>
+        <field name="res_model">ar.fb.demande</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('state','=','refused')]</field>
+    </record>
+
+</odoo>

@@ -1,104 +1,92 @@
 # AR - Fourniture Bureau
 
+Module Odoo pour les demandes de fournitures de bureau avec validation N+1, traitement et reception.
 
-> Documentation du module de demande de fournitures de bureau.
+## Objectif
 
+Cette documentation explique le perimetre fonctionnel du module, les roles utilisateurs, le workflow, la configuration et les principaux objets techniques.
 
-## Vue d?ensemble
+## Utilisateurs concernes
 
-Le module permet aux collaborateurs de demander des fournitures, avec validation manager N+1 puis traitement par les personnes habilit?es. Il contient un catalogue d?articles, des lignes de demande, des traiteurs et une documentation m?tier.
+- Demandeur
+- Manager N+1
+- Traiteur fournitures
+- Administrateur Odoo
 
-## Utilisateurs concern?s
-
-- Demandeur : cr?e et soumet la demande.
-- Manager N+1 : approuve ou refuse.
-- Traiteur : pr?pare et livre les fournitures.
-- Administrateur : maintient articles et personnes de traitement.
-
-## Workflow m?tier
+## Workflow metier
 
 1. Nouvelle
 2. Validation N+1
 3. Traitement
-4. Livr?e
-5. Refus?e
+4. Livree
+5. Refusee
 
-## Fonctionnement op?rationnel
+## Fonctionnement operationnel
 
-- Cr?er une demande avec les articles et quantit?s.
+- Creer une demande avec articles et quantites.
 - Soumettre au manager.
-- Le manager approuve ou refuse.
-- Le traiteur prend en charge la pr?paration.
-- Marquer la demande comme livr?e apr?s r?ception.
+- Valider ou refuser.
+- Traiter la preparation.
+- Marquer comme livree.
 
-## Configuration recommand?e
+## Configuration recommandee
 
-- Cr?er les articles de fourniture.
-- Cr?er les personnes habilit?es au traitement.
-- V?rifier la relation employ?-utilisateur-manager.
-- Configurer les groupes et r?gles d?enregistrement.
+- Creer les articles de fourniture.
+- Creer les personnes de traitement.
+- Verifier employes et managers.
+- Configurer groupes et record rules.
 
-## D?pendances Odoo
+## Dependances Odoo
 
 - `base`
-- `hr`
 - `mail`
+- `hr`
 
-## Mod?les techniques
+## Modeles principaux
 
-- `ar.fb.article` : Article fourniture bureau (`models/article.py`)
-- `ar.fb.demande` : Demande fourniture bureau (`models/demande.py`)
-- `ar.fb.demande.line` : Ligne demande fourniture (`models/demande.py`)
-- `ar.fb.documentation` : FB - Documentation (`models/documentation.py`)
-- `ar.fb.traiteur` : Personnes qui traitent (`models/traite_person.py`)
+- `ar.fb.demande`
+- `ar.fb.demande.line`
+- `ar.fb.article`
+- `ar.fb.traiteur`
+- `ar.fb.documentation`
 
-## ?tats d?tect?s dans le code
+## Structure importante du module
 
-- `models/demande.py` : `new` (Nouvelle), `n1` (Validation N+1), `processing` (Traitement), `received` (Livrée), `refused` (Refusée)
-
-## Actions serveur principales
-
-- `action_submit_n1` (`models/demande.py`)
-- `action_approve_n1` (`models/demande.py`)
-- `action_refuse` (`models/demande.py`)
-- `action_received` (`models/demande.py`)
-
-## Fichiers charg?s par le manifest
-
-- `security/security.xml`
-- `security/record_rules.xml`
 - `security/ir.model.access.csv`
+- `security/record_rules.xml`
+- `security/security.xml`
 - `data/mail_templates.xml`
 - `views/article_views.xml`
-- `views/traite_person_views.xml`
 - `views/demande_views.xml`
 - `views/documentation_views.xml`
 - `views/menus.xml`
+- `views/traite_person_views.xml`
+- `models/__init__.py`
+- `models/article.py`
+- `models/demande.py`
+- `models/documentation.py`
+- `models/traite_person.py`
 
-## S?curit? et droits
+## Securite
 
-Le module s?appuie sur les fichiers suivants pour d?finir les groupes, r?gles d?enregistrement et droits d?acc?s :
+Les droits sont geres par les fichiers du dossier `security`. Il faut verifier les groupes, les regles enregistrement et les acces CSV apres installation ou modification du module.
 
-- `security/ir.model.access.csv`
-- `security/record_rules.xml`
-- `security/security.xml`
+## Notifications et suivi
 
-## Assets et interface
+Les modules qui dependent de `mail` utilisent le chatter Odoo pour tracer les changements. Les templates mail presents dans le dossier `data` servent a notifier les acteurs concernes par les transitions.
 
-- `static/src/js/fourniture_bureau_animations.js`
-- `static/src/scss/fourniture_bureau_kanban.scss`
+## Installation
 
-## Bonnes pratiques d?utilisation
-
-- V?rifier que chaque utilisateur Odoo est li? au bon employ? lorsque le module d?pend de `hr.employee`.
-- Tester le workflow avec un dossier de test avant utilisation en production.
-- Contr?ler les groupes de s?curit? apr?s installation afin que seuls les bons r?les voient les boutons de validation.
-- Garder les templates e-mail et rapports align?s avec les proc?dures internes.
-- Sauvegarder la base avant toute modification structurelle du module.
+1. Copier le module dans le dossier addons Odoo.
+2. Redemarrer le serveur Odoo si necessaire.
+3. Mettre a jour la liste des applications.
+4. Installer ou mettre a jour le module.
+5. Verifier les droits utilisateurs et tester un dossier de bout en bout.
 
 ## Maintenance
 
-- Les ?volutions fonctionnelles doivent ?tre ajout?es dans les mod?les Python, les vues XML et les r?gles de s?curit? correspondantes.
-- Apr?s modification des vues, mettre ? jour le module depuis Odoo ou red?marrer le serveur selon le type de changement.
-- Apr?s modification des assets, vider le cache navigateur et recompiler les assets si n?cessaire.
-- Toute nouvelle ?tape de workflow doit ?tre accompagn?e des droits, boutons, notifications et filtres correspondants.
+- Ajouter toute nouvelle etape a la fois dans le modele Python, les vues XML, les droits et les notifications.
+- Tester les workflows avec plusieurs roles utilisateurs.
+- Mettre a jour les rapports et templates mail quand la procedure interne change.
+- Eviter de modifier les donnees de production sans sauvegarde.
+- Documenter toute evolution fonctionnelle dans ce README.

@@ -221,6 +221,30 @@ class ARFBDemande(models.Model):
             )
             return
 
+    def _post_workflow_trace(self, old_state, new_state):
+        self.ensure_one()
+        if not old_state or old_state == new_state:
+            return
+
+        state_labels = dict(self._fields["state"].selection)
+        messages = {
+            ("new", "n1"): _("Demande soumise par %s. Demande transmise a Validation N+1."),
+            ("n1", "processing"): _("Validation N+1 effectuee par %s. Demande transmise au traitement."),
+            ("processing", "received"): _("Traitement cloture par %s. Demande marquee comme livree."),
+            ("n1", "refused"): _("Demande refusee par %s."),
+            ("processing", "refused"): _("Demande refusee par %s."),
+        }
+        body = messages.get((old_state, new_state))
+        if body:
+            body = body % self.env.user.name
+        else:
+            body = _("Changement d'etape effectue par %s : %s -> %s.") % (
+                self.env.user.name,
+                state_labels.get(old_state, old_state),
+                state_labels.get(new_state, new_state),
+            )
+        self.message_post(body=body)
+
     date_besoin = fields.Date(string="Date de besoin", required=True, tracking=True)
 
     line_ids = fields.One2many(
@@ -442,6 +466,7 @@ class ARFBDemande(models.Model):
                 new_state = rec.state
                 if old_state != new_state:
                     rec._send_on_state_change(old_state, new_state)
+                    rec._post_workflow_trace(old_state, new_state)
 
         return res
 

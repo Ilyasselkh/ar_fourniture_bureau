@@ -2,6 +2,10 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, AccessError
 import base64
 import gzip
+import logging
+
+
+_logger = logging.getLogger(__name__)
 
 
 class ARFBDemande(models.Model):
@@ -137,9 +141,12 @@ class ARFBDemande(models.Model):
             return False
         emp = emp.sudo()
         user = emp.user_id
-        email = False
-        if user:
-            email = user.partner_id.email or user.email
+        email = (
+            emp.work_email
+            or getattr(emp, "private_email", False)
+            or (user.partner_id.email if user and user.partner_id else False)
+            or (user.email if user else False)
+        )
         return self._clean_header(email) if email else False
 
     def _get_demandeur_email(self):
@@ -166,25 +173,32 @@ class ARFBDemande(models.Model):
         self.ensure_one()
         template = self.env.ref(xmlid, raise_if_not_found=False)
         if not template:
+            self.message_post(body=_("Email non envoye : modele introuvable (%s).") % xmlid)
             return
 
         recipients = [self._clean_header(e) for e in (email_to_list or [])]
         recipients = [e for e in recipients if e]
+        recipients = list(dict.fromkeys(recipients))
         if not recipients:
+            self.message_post(body=_("Email non envoye : aucun destinataire avec une adresse email renseignee."))
             return
 
         email_values = {
             "email_to": self._clean_header(",".join(recipients)),
             "reply_to": self._clean_header(self.env.user.partner_id.email or self.env.user.email or ""),
         }
-        template.send_mail(self.id, force_send=True, email_values=email_values)
+        try:
+            template.sudo().send_mail(self.id, force_send=True, raise_exception=True, email_values=email_values)
+        except Exception as exc:
+            _logger.exception("Erreur d'envoi email fourniture bureau %s via %s", self.name, xmlid)
+            self.message_post(body=_("Email non envoye a %s : %s") % (", ".join(recipients), exc))
 
     def _send_on_state_change(self, old_state, new_state):
         """Règles emails selon ton besoin."""
         self.ensure_one()
 
         # 1) Création => mail au manager N+1
-        if old_state in (False, None) and new_state == "new":
+        if old_state == "new" and new_state == "n1":
             self._send_template(
                 "ar_fourniture_bureau.mail_template_fb_new_to_manager",
                 [self._get_manager_n1_email()],

@@ -1,38 +1,32 @@
 <odoo>
-    <!-- ========================= -->
     <!-- Menu racine -->
-    <!-- ========================= -->
     <menuitem id="ar_fb_menu_root"
               name="AR Fourniture Bureau"
               sequence="10"
               groups="ar_fourniture_bureau.group_ar_fb_user,ar_fourniture_bureau.group_ar_fb_manager,ar_fourniture_bureau.group_ar_fb_traitement,ar_fourniture_bureau.group_ar_fb_param"/>
 
-    <!-- ========================= -->
     <!-- Paramétrage -->
-    <!-- ========================= -->
     <menuitem id="ar_fb_menu_param"
-          name="Paramétrage"
-          parent="ar_fb_menu_root"
-          sequence="40"
-          groups="ar_fourniture_bureau.group_ar_fb_param"/>
+              name="Paramétrage"
+              parent="ar_fb_menu_root"
+              sequence="40"
+              groups="ar_fourniture_bureau.group_ar_fb_param"/>
 
-<menuitem id="ar_fb_menu_article"
-          name="Articles"
-          parent="ar_fb_menu_param"
-          action="action_ar_fb_article"
-          sequence="10"
-          groups="ar_fourniture_bureau.group_ar_fb_param"/>
+    <menuitem id="ar_fb_menu_article"
+              name="Articles"
+              parent="ar_fb_menu_param"
+              action="action_ar_fb_article"
+              sequence="10"
+              groups="ar_fourniture_bureau.group_ar_fb_param"/>
 
-<menuitem id="ar_fb_menu_traiteur"
-          name="Personnes qui traitent"
-          parent="ar_fb_menu_param"
-          action="action_ar_fb_traiteur"
-          sequence="20"
-          groups="ar_fourniture_bureau.group_ar_fb_param"/>
+    <menuitem id="ar_fb_menu_traiteur"
+              name="Personnes qui traitent"
+              parent="ar_fb_menu_param"
+              action="action_ar_fb_traiteur"
+              sequence="20"
+              groups="ar_fourniture_bureau.group_ar_fb_param"/>
 
-    <!-- ========================= -->
     <!-- Demande -->
-    <!-- ========================= -->
     <menuitem id="ar_fb_menu_demande"
               name="Demande"
               parent="ar_fb_menu_root"
@@ -40,9 +34,7 @@
               sequence="10"
               groups="ar_fourniture_bureau.group_ar_fb_user,ar_fourniture_bureau.group_ar_fb_manager,ar_fourniture_bureau.group_ar_fb_traitement"/>
 
-    <!-- ========================= -->
     <!-- Archive -->
-    <!-- ========================= -->
     <menuitem id="ar_fb_menu_archive"
               name="Archive"
               parent="ar_fb_menu_root"
@@ -63,14 +55,11 @@
               sequence="20"
               groups="ar_fourniture_bureau.group_ar_fb_user,ar_fourniture_bureau.group_ar_fb_manager,ar_fourniture_bureau.group_ar_fb_traitement"/>
 
-      <!-- ========================= -->
-      <!-- Documentation -->
-      <!-- ========================= -->
-      <menuitem id="ar_fb_menu_documentation"
-          name="Documentation"
-          parent="ar_fb_menu_root"
-          action="action_ar_fb_documentation"
-          sequence="30"
-          groups="ar_fourniture_bureau.group_ar_fb_user,ar_fourniture_bureau.group_ar_fb_manager,ar_fourniture_bureau.group_ar_fb_traitement,ar_fourniture_bureau.group_ar_fb_param"/>
-
+    <!-- Documentation -->
+    <menuitem id="ar_fb_menu_documentation"
+              name="Documentation"
+              parent="ar_fb_menu_root"
+              action="action_ar_fb_documentation"
+              sequence="30"
+              groups="ar_fourniture_bureau.group_ar_fb_user,ar_fourniture_bureau.group_ar_fb_manager,ar_fourniture_bureau.group_ar_fb_traitement,ar_fourniture_bureau.group_ar_fb_param"/>
 </odoo>

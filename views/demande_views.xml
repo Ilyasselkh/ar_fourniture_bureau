@@ -1,4 +1,4 @@
-<odoo>
+﻿<odoo>
 
     <!-- ========================= -->
     <!-- Séquence -->
@@ -81,12 +81,6 @@
             <form string="Demande fourniture bureau" class="ar_fb_demande_form">
 
                 <header>
-                    <field name="state"
-                           widget="statusbar"
-                           statusbar_visible="new,n1,processing,received,refused"/>
-                </header>
-
-                <header>
                     <button name="action_submit_n1"
                             type="object"
                             string="Soumettre N+1"
@@ -123,9 +117,13 @@
                             class="btn-danger"
                             groups="ar_fourniture_bureau.group_ar_fb_traitement"
                             invisible="not can_refuse_request or state != 'processing'"/>
+
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="new,n1,processing,received,refused"/>
                 </header>
 
-                <sheet class="ar_fb_demande_sheet">
+                <sheet class="ar_sortie_caisse_sheet ar_fb_demande_sheet" style="max-width: none; width: calc(100% - 32px);">
                     <field name="is_demandeur" invisible="True"/>
                     <field name="is_manager_n1" invisible="True"/>
                     <field name="can_process" invisible="True"/>
@@ -144,14 +142,6 @@
                             <h1>
                                 <field name="name" readonly="True" nolabel="1"/>
                             </h1>
-                            <div class="ar_sc_static_3d" aria-hidden="true">
-                                <span class="ar_sc_3d_card ar_sc_3d_card_main"/>
-                                <span class="ar_sc_3d_card ar_sc_3d_card_back"/>
-                                <span class="ar_sc_3d_card ar_sc_3d_card_front"/>
-                                <span class="ar_sc_3d_coin ar_sc_3d_coin_one"/>
-                                <span class="ar_sc_3d_coin ar_sc_3d_coin_two"/>
-                                <span class="ar_sc_3d_coin ar_sc_3d_coin_three"/>
-                            </div>
                         </div>
                         <div class="ar_sortie_caisse_amount ar_request_status_box">
                             <span>Statut actuel</span>
@@ -162,10 +152,10 @@
                     <div class="ar_sortie_caisse_main_row">
                         <group class="ar_sortie_caisse_panel ar_sortie_caisse_identity">
                             <group string="Informations demandeur">
-                                <field name="date_besoin" readonly="not can_edit_request"/>
                                 <field name="demandeur_id" readonly="True"/>
                                 <field name="department_id" readonly="True"/>
                                 <field name="manager_n1_id" readonly="True"/>
+                                <field name="date_besoin" readonly="not can_edit_request"/>
                             </group>
                         </group>
 
@@ -180,14 +170,11 @@
                         </group>
                     </div>
 
-                    <!-- ========================= -->
-                    <!-- Tableau -->
-                    <!-- ========================= -->
-                    <separator string="Articles demandés"/>
-
-                    <div class="ar_sortie_caisse_panel ar_sortie_caisse_lines">
+                    <group class="ar_sortie_caisse_panel ar_sortie_caisse_lines" col="4">
+                        <separator string="Articles demandés" colspan="4"/>
                         <field name="line_ids"
                                nolabel="1"
+                               colspan="4"
                                class="o_full_width"
                                readonly="not can_edit_request">
                             <list editable="bottom" string="Lignes">
@@ -198,7 +185,7 @@
                                 <field name="quantity" string="Qté"/>
                             </list>
                         </field>
-                    </div>
+                    </group>
 
                 </sheet>
 

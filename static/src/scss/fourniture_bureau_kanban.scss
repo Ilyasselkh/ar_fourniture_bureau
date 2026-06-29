@@ -74,6 +74,7 @@
 
     .ar_fb_demande_sheet {
         position: relative;
+        max-height: calc(100vh - 150px);
         max-width: none !important;
         width: calc(100% - 32px) !important;
         padding: 30px 34px 32px;
@@ -81,7 +82,27 @@
         border-radius: 8px;
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(252, 254, 255, 0.98) 100%);
         box-shadow: 0 20px 48px rgba(23, 32, 51, 0.1), 0 1px 0 rgba(255, 255, 255, 0.8) inset;
-        overflow: visible;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .ar_fb_demande_sheet::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .ar_fb_demande_sheet::-webkit-scrollbar-track {
+        background: rgba(231, 237, 244, 0.75);
+        border-radius: 999px;
+    }
+
+    .ar_fb_demande_sheet::-webkit-scrollbar-thumb {
+        background: rgba(15, 118, 110, 0.42);
+        border: 2px solid rgba(231, 237, 244, 0.75);
+        border-radius: 999px;
+    }
+
+    .ar_fb_demande_sheet::-webkit-scrollbar-thumb:hover {
+        background: rgba(15, 118, 110, 0.62);
     }
 
     .ar_fb_demande_sheet.ar_sc_ready {
@@ -129,7 +150,7 @@
         flex-direction: column;
         justify-content: center;
         min-height: 128px;
-        padding: 22px 260px 22px 20px;
+        padding: 22px 20px;
         border: 1px solid rgba(147, 197, 253, 0.72);
         border-radius: 8px;
         background:
@@ -161,29 +182,8 @@
     }
 
     .ar_sortie_caisse_title > div:first-child::after {
-        content: "";
-        position: absolute;
-        right: 48px;
-        top: 24px;
-        width: 150px;
-        height: 86px;
-        border: 1px solid rgba(255, 255, 255, 0.72);
-        border-radius: 14px;
-        background:
-            linear-gradient(90deg, rgba(255, 255, 255, 0.72) 18%, transparent 18% 28%, rgba(255, 255, 255, 0.45) 28% 58%, transparent 58%),
-            linear-gradient(135deg, rgba(15, 118, 110, 0.96), rgba(37, 99, 235, 0.92));
-        box-shadow:
-            -34px 26px 0 -9px rgba(255, 255, 255, 0.78),
-            -34px 26px 0 -8px rgba(37, 99, 235, 0.32),
-            22px -18px 0 -14px rgba(245, 158, 11, 0.95),
-            24px -16px 0 -13px rgba(255, 255, 255, 0.72),
-            0 24px 36px rgba(15, 23, 42, 0.2);
-        opacity: 0.96;
-        transform: rotateX(58deg) rotateZ(-15deg) translateZ(38px);
-        transform-origin: center;
-        animation: arScHeroStackFloat 4.8s ease-in-out infinite;
-        pointer-events: none;
-        z-index: 1;
+        content: none;
+        display: none;
     }
 
     .ar_sortie_caisse_title > div:first-child:hover {
@@ -507,6 +507,25 @@
         font-weight: 600;
     }
 
+    .ar_sortie_caisse_panel .o_inner_group,
+    .ar_sortie_caisse_panel .o_group {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .ar_sortie_caisse_panel .o_field_widget {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .ar_sortie_caisse_panel .o_field_widget,
+    .ar_sortie_caisse_panel .o_field_widget a,
+    .ar_sortie_caisse_panel .o_form_uri {
+        overflow-wrap: anywhere;
+        text-overflow: clip;
+        white-space: normal;
+    }
+
     .ar_sortie_caisse_description textarea {
         min-height: 104px;
         border-radius: 8px;
@@ -573,6 +592,42 @@
         box-shadow: 0 9px 20px rgba(180, 35, 24, 0.2);
         transform: translateY(-1px);
     }
+
+    .ar_sortie_caisse_title,
+    .ar_sortie_caisse_title *,
+    .ar_sortie_caisse_title *::before,
+    .ar_sortie_caisse_title *::after,
+    .ar_sortie_caisse_amount,
+    .ar_sortie_caisse_amount::before,
+    .ar_sortie_caisse_amount::after {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .ar_sortie_caisse_title > div:first-child,
+    .ar_sortie_caisse_title > div:first-child:hover {
+        transform: perspective(860px) rotateX(0deg) rotateY(0deg) translateZ(0);
+    }
+
+    .ar_sortie_caisse_amount,
+    .ar_sortie_caisse_amount:hover {
+        transform: translateZ(0);
+    }
+}
+
+@media (max-width: 1200px) {
+    .o_form_view.ar_fb_demande_form .ar_fb_demande_sheet {
+        width: calc(100% - 20px) !important;
+        padding: 24px 22px 28px;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_panel {
+        padding: 18px;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_panel .o_inner_group > tbody > tr > td.o_td_label {
+        min-width: 120px;
+    }
 }
 
 @media (max-width: 992px) {
@@ -586,13 +641,12 @@
 
     .o_form_view.ar_fb_demande_form .ar_sortie_caisse_title > div:first-child {
         min-height: 132px;
-        padding-right: 150px;
+        padding-right: 20px;
     }
 
     .o_form_view.ar_fb_demande_form .ar_sortie_caisse_title > div:first-child::after {
-        right: 18px;
-        top: 34px;
-        transform: rotateX(58deg) rotateZ(-15deg) translateZ(28px) scale(0.72);
+        content: none;
+        display: none;
     }
 
     .o_form_view.ar_fb_demande_form .ar_sc_static_3d {
@@ -607,6 +661,68 @@
 
     .o_form_view.ar_fb_demande_form .ar_sortie_caisse_main_row {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .o_form_view.ar_fb_demande_form .ar_fb_demande_sheet {
+        width: 100% !important;
+        padding: 20px 14px 24px;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_title {
+        gap: 14px;
+        padding-bottom: 18px;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_title > div:first-child {
+        padding: 18px 16px;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_amount {
+        min-height: 104px;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_panel {
+        min-height: 0;
+        padding: 16px;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_panel .o_inner_group > tbody > tr {
+        display: grid;
+        gap: 4px;
+        margin-bottom: 12px;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_panel .o_inner_group > tbody > tr > td {
+        display: block;
+        max-width: 100%;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_panel .o_inner_group > tbody > tr > td.o_td_label {
+        min-width: 0;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_lines .o_field_x2many_list {
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 520px) {
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_title > div:first-child {
+        min-height: 118px;
+        padding-right: 16px;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sc_static_3d,
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_title > div:first-child::after {
+        display: none;
+    }
+
+    .o_form_view.ar_fb_demande_form .ar_sortie_caisse_title h1 {
+        font-size: 22px;
     }
 }
 

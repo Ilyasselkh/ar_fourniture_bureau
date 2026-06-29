@@ -1,46 +1,123 @@
 # AR - Fourniture Bureau
 
-Module Odoo pour les demandes de fournitures de bureau avec validation N+1, traitement et reception.
+Module Odoo de gestion des demandes de fournitures de bureau.
 
-## Objectif
+Le module couvre la demande par collaborateur, la validation Manager N+1, le traitement par les personnes de traitement et la confirmation de livraison.
 
-Cette documentation explique le perimetre fonctionnel du module, les roles utilisateurs, le workflow, la configuration et les principaux objets techniques.
+## Objectif fonctionnel
 
-## Utilisateurs concernes
+Centraliser les demandes de fournitures et tracer leur traitement de bout en bout.
 
-- Demandeur
-- Manager N+1
-- Traiteur fournitures
-- Administrateur Odoo
+Le module permet de :
 
-## Workflow metier
+- creer une demande de fournitures ;
+- ajouter des articles et quantites ;
+- rattacher automatiquement le demandeur, son departement et son Manager N+1 ;
+- soumettre la demande au Manager N+1 ;
+- valider ou refuser la demande ;
+- faire traiter la demande par une personne habilitee ;
+- marquer la demande comme livree ;
+- notifier les acteurs par email ;
+- tracer les changements dans le chatter.
 
-1. Nouvelle
-2. Validation N+1
-3. Traitement
-4. Livree
-5. Refusee
+## Roles fonctionnels
 
-## Fonctionnement operationnel
+### Demandeur
 
-- Creer une demande avec articles et quantites.
-- Soumettre au manager.
-- Valider ou refuser.
-- Traiter la preparation.
-- Marquer comme livree.
+Le demandeur initie la demande.
 
-## Configuration recommandee
+Il peut :
 
-- Creer les articles de fourniture.
-- Creer les personnes de traitement.
-- Verifier employes et managers.
-- Configurer groupes et record rules.
+- creer une demande ;
+- ajouter les lignes d'articles ;
+- joindre des pieces si necessaire ;
+- soumettre la demande ;
+- suivre l'etat ;
+- recevoir la notification de livraison ou de refus.
 
-## Dependances Odoo
+### Manager N+1
 
-- `base`
-- `mail`
-- `hr`
+Le Manager N+1 valide ou refuse la demande.
+
+Condition importante : l'utilisateur doit etre le Manager N+1 reel du demandeur.
+
+### Traiteur fournitures
+
+Le traiteur prepare et livre les fournitures.
+
+Il doit etre declare dans le referentiel des personnes de traitement et etre disponible.
+
+Il peut :
+
+- consulter les demandes validees ;
+- traiter la preparation ;
+- marquer la demande comme livree ;
+- refuser depuis l'etape de traitement si necessaire.
+
+### Administrateur
+
+L'administrateur maintient les articles, les traiteurs, la documentation et les droits.
+
+## Etats du workflow
+
+Les etats principaux sont :
+
+- `Nouvelle`
+- `Validation N+1`
+- `Traitement`
+- `Livree`
+- `Refusee`
+
+## Flux de validation
+
+1. `Nouvelle`
+2. `Validation N+1`
+3. `Traitement`
+4. `Livree`
+
+Un refus est possible depuis :
+
+- `Validation N+1` par le Manager N+1 ;
+- `Traitement` par une personne de traitement autorisee.
+
+## Donnees de reference
+
+Le module utilise :
+
+- un catalogue d'articles ;
+- un referentiel des traiteurs ;
+- une documentation interne.
+
+Les traiteurs doivent etre lies a un employe Odoo et marques comme disponibles pour recevoir les demandes.
+
+## Notifications
+
+Les templates email couvrent notamment :
+
+- nouvelle demande vers Manager N+1 ;
+- demande approuvee vers demandeur ;
+- demande en traitement vers traiteurs ;
+- demande livree vers demandeur ;
+- demande refusee vers demandeur.
+
+Fichier principal :
+
+- `data/mail_templates.xml`
+
+## Securite et droits
+
+Les droits sont definis dans :
+
+- `security/security.xml`
+- `security/record_rules.xml`
+- `security/ir.model.access.csv`
+
+Points de controle :
+
+- seul le demandeur modifie une demande nouvelle ;
+- seul le Manager N+1 valide a l'etape N+1 ;
+- seuls les traiteurs disponibles traitent les demandes ;
+- les demandes livrees ou refusees ne doivent plus etre modifiees.
 
 ## Modeles principaux
 
@@ -50,43 +127,41 @@ Cette documentation explique le perimetre fonctionnel du module, les roles utili
 - `ar.fb.traiteur`
 - `ar.fb.documentation`
 
-## Structure importante du module
+## Structure du module
 
-- `security/ir.model.access.csv`
-- `security/record_rules.xml`
 - `security/security.xml`
+- `security/record_rules.xml`
+- `security/ir.model.access.csv`
 - `data/mail_templates.xml`
 - `views/article_views.xml`
+- `views/traite_person_views.xml`
 - `views/demande_views.xml`
 - `views/documentation_views.xml`
 - `views/menus.xml`
-- `views/traite_person_views.xml`
-- `models/__init__.py`
 - `models/article.py`
 - `models/demande.py`
-- `models/documentation.py`
 - `models/traite_person.py`
-
-## Securite
-
-Les droits sont geres par les fichiers du dossier `security`. Il faut verifier les groupes, les regles enregistrement et les acces CSV apres installation ou modification du module.
-
-## Notifications et suivi
-
-Les modules qui dependent de `mail` utilisent le chatter Odoo pour tracer les changements. Les templates mail presents dans le dossier `data` servent a notifier les acteurs concernes par les transitions.
+- `models/documentation.py`
+- `static/src/scss/fourniture_bureau_kanban.scss`
+- `static/src/js/fourniture_bureau_animations.js`
 
 ## Installation
 
 1. Copier le module dans le dossier addons Odoo.
 2. Redemarrer le serveur Odoo si necessaire.
 3. Mettre a jour la liste des applications.
-4. Installer ou mettre a jour le module.
-5. Verifier les droits utilisateurs et tester un dossier de bout en bout.
+4. Installer le module.
+5. Creer les articles de fournitures.
+6. Declarer les traiteurs disponibles.
+7. Verifier les managers dans les fiches employes.
+8. Tester une demande complete.
 
-## Maintenance
+## Maintenance fonctionnelle
 
-- Ajouter toute nouvelle etape a la fois dans le modele Python, les vues XML, les droits et les notifications.
-- Tester les workflows avec plusieurs roles utilisateurs.
-- Mettre a jour les rapports et templates mail quand la procedure interne change.
-- Eviter de modifier les donnees de production sans sauvegarde.
-- Documenter toute evolution fonctionnelle dans ce README.
+Lorsqu'une regle change, verifier aussi :
+
+- les boutons de workflow ;
+- les record rules ;
+- les templates email ;
+- le referentiel des traiteurs ;
+- ce README.
